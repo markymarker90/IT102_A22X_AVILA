@@ -1,0 +1,12 @@
+Account Number: 1234
+Account Name: Juan Dela
+PIN: 1111
+Account Type: Savings Account
+Balance: 1101121112.00
+
+Account Number: 123
+Account Name: john doe
+PIN: 9999
+Account Type: Savings Account
+Balance: 12202760.00
+

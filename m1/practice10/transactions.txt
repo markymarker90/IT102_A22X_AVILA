@@ -1,0 +1,64 @@
+Timestamp: 2026-09-04 17:49:10
+Account Number: 123
+Account: john doe
+Account Type: Savings Account
+Transaction: Deposit
+Amount: ₱123123.00
+Balance After: ₱2446355.00
+
+Timestamp: 2026-09-04 17:49:17
+Account Number: 123
+Account: john doe
+Account Type: Savings Account
+Transaction: Withdraw
+Amount: ₱232323.00
+Balance After: ₱2214032.00
+
+Timestamp: 2026-09-04 17:49:26
+Account Number: 123
+Account: john doe
+Account Type: Savings Account
+Transaction: Transfer to #1234
+Amount: ₱10000.00
+Balance After: ₱2204032.00
+
+Timestamp: 2026-09-04 17:49:26
+Account Number: 1234
+Account: Juan Dela
+Account Type: Savings Account
+Transaction: Transfer from #123
+Amount: ₱10000.00
+Balance After: ₱1111121111.00
+
+Timestamp: 2026-09-04 17:49:35
+Account Number: 123
+Account: john doe
+Account Type: Savings Account
+Transaction: Bills Payment: Maynilad (Water)
+Amount: ₱1221.00
+Balance After: ₱2202811.00
+
+Timestamp: 2026-09-04 17:49:45
+Account Number: 123
+Account: john doe
+Account Type: Savings Account
+Transaction: E-Load (Globe): 09912312323
+Amount: ₱50.00
+Balance After: ₱2202761.00
+
+Timestamp: 2026-09-04 17:50:38
+Account Number: 1234
+Account: Juan Dela
+Account Type: Savings Account
+Transaction: Transfer to #123
+Amount: ₱9999999.00
+Balance After: ₱1101121112.00
+
+Timestamp: 2026-09-04 17:50:38
+Account Number: 123
+Account: john doe
+Account Type: Savings Account
+Transaction: Transfer from #1234
+Amount: ₱9999999.00
+Balance After: ₱12202760.00
+
