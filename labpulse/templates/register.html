@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LabPulse — Create Account</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="login-body">
+    <div class="login-card">
+        <h1>CREATE ACCOUNT</h1>
+        <p class="subtitle">Register a new Student, Instructor, or Custodian ID</p>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST" action="{{ url_for('register') }}">
+            <label for="user_id">Student / Staff ID Number</label>
+            <input type="text" id="user_id" name="user_id" placeholder="e.g., 2026-0005 or INST-102" required>
+
+            <label for="full_name">Full Name</label>
+            <input type="text" id="full_name" name="full_name" placeholder="e.g., Juan Dela Cruz" required>
+
+            <label for="role">Account Role</label>
+            <select id="role" name="role" required>
+                <option value="Student">Student</option>
+                <option value="Instructor">Instructor</option>
+                <option value="LabCustodian">Lab Custodian</option>
+            </select>
+
+            <label for="meta_info">Program / Department / Shift</label>
+            <input type="text" id="meta_info" name="meta_info" placeholder="e.g., BSIT, IT Dept, or Day Shift" required>
+
+            <label for="password">Password / PIN (Min. 4 characters)</label>
+            <input type="password" id="password" name="password" placeholder="Create a Password or PIN" required>
+
+            <button type="submit" class="btn btn-success full-width">Register Account</button>
+        </form>
+
+        <div style="text-align: center; margin-top: 16px; font-size: 13px;">
+            <a href="{{ url_for('login') }}" style="color: #38bdf8; text-decoration: none;">
+                &larr; Back to Login
+            </a>
+        </div>
+    </div>
+</body>
+</html>

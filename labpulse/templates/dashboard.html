@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LabPulse — Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header class="top-bar">
+        <h2>{{ config.title }}</h2>
+        <div class="top-actions">
+            {% if config.can_export_logs %}
+            <form method="POST" action="{{ url_for('handle_action') }}" style="display:inline;">
+                <input type="hidden" name="action_type" value="EXPORT_LOGS">
+                <input type="hidden" name="pc_id" value="{{ selected_ws.get_pc_id() }}">
+                <button type="submit" class="btn btn-secondary">Export Logs (CSV)</button>
+            </form>
+            {% endif %}
+            <a href="{{ url_for('logout') }}" class="btn btn-danger">Logout</a>
+        </div>
+    </header>
+
+    <main class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="dashboard-grid">
+            <!-- Left Column: Real-Time Seat Map & Logs -->
+            <section class="left-panel">
+                <div class="card">
+                    <h3>Real-Time Laboratory Seat Map (Click a PC to Select)</h3>
+                    <div class="seat-grid">
+                        {% for ws in workstations %}
+                        <a href="{{ url_for('dashboard', pc=ws.get_pc_id()) }}"
+                           class="pc-tile status-{{ ws.get_status() | lower }} {% if ws.get_pc_id() == selected_ws.get_pc_id() %}selected-pc{% endif %}">
+                            <div class="pc-name">{{ ws.get_pc_id() }}</div>
+                            <div class="pc-status">{{ ws.get_status() }}</div>
+                            {% if ws.get_current_user() %}
+                            <div class="pc-user">User: {{ ws.get_current_user() }}</div>
+                            {% endif %}
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Laboratory Utilization History (Session Logs)</h3>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>PC</th>
+                                    <th>User ID</th>
+                                    <th>Check-In</th>
+                                    <th>Check-Out</th>
+                                    <th>Pre-Session Condition</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for s in sessions %}
+                                <tr>
+                                    <td>#{{ s.get_session_id() }}</td>
+                                    <td>{{ s.get_pc_id() }}</td>
+                                    <td>{{ s.get_user_id() }}</td>
+                                    <td>{{ s.get_check_in_time() }}</td>
+                                    <td>{{ s.get_check_out_time() or 'ACTIVE' }}</td>
+                                    <td>{{ s.get_pre_condition() }}</td>
+                                </tr>
+                                {% else %}
+                                <tr><td colspan="6">No session logs recorded yet.</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Fault Tickets & Maintenance Records</h3>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Ticket</th>
+                                    <th>PC</th>
+                                    <th>Severity</th>
+                                    <th>Status</th>
+                                    <th>Reported By</th>
+                                    <th>Category & Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for t in tickets %}
+                                <tr>
+                                    <td>#{{ t.get_ticket_id() }}</td>
+                                    <td>{{ t.get_pc_id() }}</td>
+                                    <td><span class="badge sev-{{ t.get_severity() | lower }}">{{ t.get_severity() }}</span></td>
+                                    <td>{{ t.get_status() }}</td>
+                                    <td>{{ t.get_reported_by() }}</td>
+                                    <td>[{{ t.get_category() }}] {{ t.get_description() }}</td>
+                                </tr>
+                                {% else %}
+                                <tr><td colspan="6">No fault tickets reported.</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Right Column: Workstation Action Console -->
+            <aside class="right-panel">
+                <div class="card">
+                    <h3>Selected Workstation: {{ selected_ws.get_pc_id() }}</h3>
+                    <p><strong>Status:</strong> {{ selected_ws.get_status() }}</p>
+                    <p><strong>Current User:</strong> {{ selected_ws.get_current_user() or 'None' }}</p>
+                    <p><strong>Condition Note:</strong> {{ selected_ws.get_condition_notes() }}</p>
+                    <hr>
+
+                    <h4>1. Session Check-In / Check-Out</h4>
+                    <form method="POST" action="{{ url_for('handle_action') }}">
+                        <input type="hidden" name="action_type" value="CHECK_IN">
+                        <input type="hidden" name="pc_id" value="{{ selected_ws.get_pc_id() }}">
+                        <label>Pre-Session Condition Verification:</label>
+                        <select name="pre_condition">
+                            <option value="All Hardware & Software OK">All Hardware & Software OK</option>
+                            <option value="Minor Peripheral Wear (Usable)">Minor Peripheral Wear (Usable)</option>
+                            <option value="Network / App Lag Observed">Network / App Lag Observed</option>
+                        </select>
+                        <button type="submit" class="btn btn-success full-width">Check-In to {{ selected_ws.get_pc_id() }}</button>
+                    </form>
+
+                    <form method="POST" action="{{ url_for('handle_action') }}" style="margin-top: 8px;">
+                        <input type="hidden" name="action_type" value="CHECK_OUT">
+                        <input type="hidden" name="pc_id" value="{{ selected_ws.get_pc_id() }}">
+                        <button type="submit" class="btn btn-primary full-width">Check-Out of {{ selected_ws.get_pc_id() }}</button>
+                    </form>
+
+                    <hr>
+                    <h4>2. Submit Fault Ticket</h4>
+                    <form method="POST" action="{{ url_for('handle_action') }}">
+                        <input type="hidden" name="action_type" value="REPORT_FAULT">
+                        <input type="hidden" name="pc_id" value="{{ selected_ws.get_pc_id() }}">
+
+                        <label>Fault Category:</label>
+                        <select name="category">
+                            <option value="Hardware (Monitor/Mouse/KB)">Hardware (Monitor/Mouse/KB)</option>
+                            <option value="System Unit / Boot Failure">System Unit / Boot Failure</option>
+                            <option value="Software / Missing IDE">Software / Missing IDE</option>
+                            <option value="Network / No Internet">Network / No Internet</option>
+                        </select>
+
+                        <label>Severity Level (Polymorphic Handling):</label>
+                        <select name="severity">
+                            <option value="Low">Low (Flags PC, Keeps Operational)</option>
+                            <option value="Medium">Medium (Flags PC, Keeps Operational)</option>
+                            <option value="High">High (Locks PC to Maintenance)</option>
+                            <option value="Critical">Critical (Locks PC to Maintenance)</option>
+                        </select>
+
+                        <label>Issue Description:</label>
+                        <input type="text" name="description" placeholder="Describe the hardware/software issue..." required>
+
+                        <button type="submit" class="btn btn-warning full-width">Submit Fault Ticket</button>
+                    </form>
+
+                    {% if config.can_resolve_fault %}
+                    <hr>
+                    <h4>3. Custodian Repair Resolution</h4>
+                    <form method="POST" action="{{ url_for('handle_action') }}">
+                        <input type="hidden" name="action_type" value="RESOLVE_FAULT">
+                        <input type="hidden" name="pc_id" value="{{ selected_ws.get_pc_id() }}">
+                        <label>Ticket ID to Resolve:</label>
+                        <input type="number" name="ticket_id" placeholder="Enter Ticket ID (e.g., 1)" required>
+                        <button type="submit" class="btn btn-success full-width">Resolve Ticket & Restore PC</button>
+                    </form>
+                    {% endif %}
+                </div>
+            </aside>
+        </div>
+    </main>
+</body>
+</html>

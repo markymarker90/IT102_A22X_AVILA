@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LabPulse — Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="login-body">
+    <div class="login-card">
+        <h1>LABPULSE SYSTEM</h1>
+        <p class="subtitle">Smart Computer Laboratory Utilization & Fault Tracking</p>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST" action="{{ url_for('login') }}">
+            <label for="user_id">Student / Staff ID Number</label>
+            <input type="text" id="user_id" name="user_id" placeholder="e.g., 2026-0001" required>
+
+            <label for="password">Account Password / PIN</label>
+            <input type="password" id="password" name="password" placeholder="Enter PIN" required>
+
+            <button type="submit" class="btn btn-primary full-width">Login to Workstation Portal</button>
+        </form>
+<div style="text-align: center; margin-top: 14px; font-size: 13px;">
+            Don't have an account? 
+            <a href="{{ url_for('register') }}" style="color: #38bdf8; font-weight: 600; text-decoration: none;">
+                Register here
+            </a>
+        </div>
+        <div class="demo-box">
+            <strong>Demo Accounts (Default PINs):</strong>
+            <ul>
+                <li><strong>Student:</strong> <code>2026-0001</code> (PIN: <code>1234</code>)</li>
+                <li><strong>Instructor:</strong> <code>INST-101</code> (PIN: <code>2345</code>)</li>
+                <li><strong>Lab Custodian:</strong> <code>CUST-001</code> (PIN: <code>9999</code>)</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
