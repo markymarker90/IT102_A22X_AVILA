@@ -2,7 +2,7 @@
 
 LabPulse is a full-stack Python web application designed to manage computer laboratory sessions, track workstation utilization, and handle hardware/software fault reporting. It is built with Object-Oriented Programming (OOP) principles, utilizing a polymorphic role-based access system for Students, Instructors, and Lab Custodians.
 
-## 🚀 Key Features
+##  Key Features
 
 * **Role-Based Authentication:** Secure login and registration system with tailored dashboard privileges for `Student`, `Instructor`, and `LabCustodian` classes using OOP polymorphism.
 * **Workstation Tracking:** Real-time check-in and check-out system for laboratory PCs, preventing overlapping sessions and tracking pre-session conditions.
@@ -10,14 +10,14 @@ LabPulse is a full-stack Python web application designed to manage computer labo
 * **Automated Log Exporting:** Instructors and Custodians can generate and export complete system utilization logs and maintenance records directly to CSV files.
 * **Embedded Database:** Powered by a lightweight, zero-configuration SQLite3 database (`labpulse.db`) handled natively through Python.
 
-## 🛠️ Technology Stack
+##  Technology Stack
 
 * **Backend:** Python 3, Flask (Web Framework)
 * **Frontend:** HTML5, CSS3, Jinja2 Templating
 * **Database:** SQLite3 (Built-in Python `sqlite3` library)
 * **Environment:** GitHub Codespaces / Python Virtual Environment
 
-## 📁 Project Structure
+##  Project Structure
 
 ```text
 labpulse/
